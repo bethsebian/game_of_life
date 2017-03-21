@@ -1,21 +1,13 @@
 require 'pry'
 
 class Cell
-  NEIGHBOR_POSITIONS = %w(top_left top_center top_right left right bottom_left bottom_center bottom_right)
   attr_reader :neighbors, :condition
+  NEIGHBOR_POSITIONS = [:top_left,:top_center,:top_right,:left,:right,:bottom_left,:bottom_center,:bottom_right]
 
-  def initialize
-    @condition = "dead"
-    @neighbors = {"TL" => nil,
-                "TC" => nil,
-                "TR" => nil,
-                "L" => nil,
-                "R" => nil,
-                "BL" => nil,
-                "BC" => nil,
-                "BR" => nil}
+  def initialize(condition = "dead")
+    @condition = condition
+    @neighbors = {}
   end
-
 
   def transform
     count = @neighbors.count do |position, neighbor|
@@ -27,5 +19,9 @@ class Cell
 
   def rouse
     @condition = "alive"
+  end
+
+  def introduce_neighbors(new_neighbors)
+    @neighbors.merge!(new_neighbors)
   end
 end
