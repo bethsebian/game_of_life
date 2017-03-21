@@ -4,7 +4,7 @@ class Cell
   attr_reader :neighbors
   attr_accessor :condition
 
-  def initialize(neighbors)
+  def initialize
     @condition = "dead"
     @neighbors = {"TL" => nil,
                 "TC" => nil,
@@ -13,15 +13,15 @@ class Cell
                 "R" => nil,
                 "BL" => nil,
                 "BC" => nil,
-                "BR" => nil}.merge(neighbors)
+                "BR" => nil}
   end
 
   def transform
     count = @neighbors.count do |position, neighbor|
       neighbor.condition == "alive"
     end
-    @next_condition = "dead" if count < 2 || count > 3 #
-    @next_condition = "alive" if count == 3
+    @condition = "dead" if count < 2 || count > 3 #
+    @condition = "alive" if count == 3
   end
 
   def update
