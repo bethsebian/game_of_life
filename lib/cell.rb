@@ -23,8 +23,4 @@ class Cell
     @condition = "dead" if count < 2 || count > 3 #
     @condition = "alive" if count == 3
   end
-
-  def update
-    @condition = @next_condition
-  end
 end
