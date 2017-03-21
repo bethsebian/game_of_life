@@ -1,7 +1,7 @@
 require 'pry'
 
 class Cell
-  NEIGHBORS = %w(top_left top_center top_right left right bottom_left bottom_center bottom_right)
+  NEIGHBOR_POSITIONS = %w(top_left top_center top_right left right bottom_left bottom_center bottom_right)
   attr_reader :neighbors, :condition
 
   def initialize

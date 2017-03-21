@@ -31,7 +31,7 @@ class CellTest < Minitest::Test
   def test_it_can_access_list_of_neighbors
     expected = %w(top_left top_center top_right left right bottom_left bottom_center bottom_right)
 
-    assert_equal expected, Cell::NEIGHBORS
+    assert_equal expected, Cell::NEIGHBOR_POSITIONS
   end
 
   def test_it_dies_if_all_neighbors_are_dead
