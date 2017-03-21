@@ -1,8 +1,7 @@
 require 'pry'
 
 class Cell
-  attr_reader :neighbors
-  attr_accessor :condition
+  attr_reader :neighbors, :condition
 
   def initialize
     @condition = "dead"
@@ -22,5 +21,9 @@ class Cell
     end
     @condition = "dead" if count < 2 || count > 3 #
     @condition = "alive" if count == 3
+  end
+
+  def rouse
+    @condition = "alive"
   end
 end
