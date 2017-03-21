@@ -28,17 +28,10 @@ class CellTest < Minitest::Test
     assert_equal "alive", cell.condition
   end
 
-  def test_it_has_empty_neighbors_at_birth
-    expected = {"TL" => nil,
-                "TC" => nil,
-                "TR" => nil,
-                "L" => nil,
-                "R" => nil,
-                "BL" => nil,
-                "BC" => nil,
-                "BR" => nil}
+  def test_it_can_access_list_of_neighbors
+    expected = %w(top_left top_center top_right left right bottom_left bottom_center bottom_right)
 
-    assert_equal expected, cell.neighbors
+    assert_equal expected, Cell::NEIGHBORS
   end
 
   def test_it_dies_if_all_neighbors_are_dead
