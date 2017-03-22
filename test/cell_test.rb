@@ -100,9 +100,32 @@ class CellTest < Minitest::Test
     cell.introduce_neighbors({right: alive_1, bottom_center: dead_1, bottom_right: alive_2})
     alive_1.introduce_neighbors({left: cell, bottom_left: dead_1, bottom_center: alive_2})
     alive_2.introduce_neighbors({top_left: cell, top_center: alive_1, left: dead_1})
-    dead_1.introduce_neighbors({top: cell, top_right: alive_1, right: alive_2})
+    dead_1.introduce_neighbors({top_center: cell, top_right: alive_1, right: alive_2})
     assert_equal "alive", cell.neighbors[:right].condition
 
+    cell.transform
+
+    assert_equal "alive", cell.condition
+    assert_equal "alive", cell.neighbors[:right].condition
+    assert_equal "alive", cell.neighbors[:bottom_center].condition
+    assert_equal "alive", cell.neighbors[:bottom_right].condition
+  end
+
+  def test_neighbors_transform_correctly_multiple_times
+    # XO    OO     XX    XX
+    # OX => OO MAN OX => XX
+    cell.rouse
+    top_right = Cell.new
+    bottom_left = Cell.new
+    bottom_right = Cell.new("alive")
+    cell.introduce_neighbors({right: top_right, bottom_center: bottom_left, bottom_right: bottom_right})
+    top_right.introduce_neighbors({left: cell, bottom_left: bottom_left, bottom_center: bottom_right})
+    bottom_left.introduce_neighbors({top_right: top_right, top_center: cell, bottom_right: bottom_right})
+    bottom_right.introduce_neighbors({top_center: top_right, top_left: cell, left: bottom_left})
+    cell.transform
+    cell.rouse
+    top_right.rouse
+    bottom_right.rouse
     cell.transform
 
     assert_equal "alive", cell.condition
