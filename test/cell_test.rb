@@ -95,4 +95,25 @@ class CellTest < Minitest::Test
 
     assert_equal "alive", cell.condition
   end
+
+  def test_neighbors_transform_also
+    # XX    XX
+    # OX => XX
+    cell.rouse
+    alive_1 = Cell.new("alive")
+    alive_2 = Cell.new("alive")
+    dead_1 = Cell.new
+    cell.introduce_neighbors({right: alive_1, bottom_center: dead_1, bottom_right: alive_2})
+    alive_1.introduce_neighbors({left: cell, bottom_left: dead_1, bottom_center: alive_2})
+    alive_2.introduce_neighbors({top_left: cell, top_center: alive_1, left: dead_1})
+    dead_1.introduce_neighbors({top: cell, top_right: alive_1, right: alive_2})
+    assert_equal "alive", cell.neighbors[:right].condition
+
+    cell.transform
+
+    assert_equal "alive", cell.condition
+    assert_equal "alive", cell.neighbors[:right].condition
+    assert_equal "alive", cell.neighbors[:bottom_center].condition
+    assert_equal "alive", cell.neighbors[:bottom_right].condition
+  end
 end
