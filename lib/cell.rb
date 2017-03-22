@@ -35,6 +35,10 @@ class Cell
     @condition = "alive"
   end
 
+  def kill
+    @condition = "dead"
+  end
+
   def introduce_neighbors(new_neighbors)
     neighbors.merge!(new_neighbors)
   end

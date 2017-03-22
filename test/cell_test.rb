@@ -22,6 +22,12 @@ class CellTest < Minitest::Test
     assert_equal "alive", cell.condition
   end
 
+  def test_it_can_kill
+    alive = Cell.new("alive").kill
+
+    assert_equal "dead", cell.condition
+  end
+
   def test_can_change_condition
     cell.rouse
 
