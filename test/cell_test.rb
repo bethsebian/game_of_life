@@ -28,12 +28,6 @@ class CellTest < Minitest::Test
     assert_equal "alive", cell.condition
   end
 
-  def test_it_can_access_list_of_neighbors
-    expected = [:top_left,:top_center,:top_right,:left,:right,:bottom_left,:bottom_center,:bottom_right]
-
-    assert_equal expected, Cell::NEIGHBOR_POSITIONS
-  end
-
   def test_cell_is_created_with_empty_neighbor_cells
     assert_equal Hash.new, cell.neighbors
   end

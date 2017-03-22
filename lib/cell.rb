@@ -2,7 +2,6 @@ require 'pry'
 
 class Cell
   attr_reader :neighbors, :condition, :touched
-  NEIGHBOR_POSITIONS = [:top_left,:top_center,:top_right,:left,:right,:bottom_left,:bottom_center,:bottom_right]
 
   def initialize(condition = "dead")
     @condition = condition
