@@ -17,9 +17,9 @@ class Cell
 
   def set_next_condition_all
     @touched = true
-    count = neighbors.count {|position, neighbor| neighbor.condition == :alive}
-    @next_condition = :dead if count < 2 || count > 3 #
-    @next_condition = :alive if count == 3
+    living_count = neighbors.count {|_, neighbor| neighbor.condition == :alive}
+    @next_condition = :dead if living_count < 2 || living_count > 3
+    @next_condition = :alive if living_count == 3
     untouched_cells.each {|neighbor| neighbor.set_next_condition_all}
   end
 

@@ -17,6 +17,7 @@ Read all about [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Ga
 *   Does add new cells and corresponding relationships to neighbors to matrix.
   *   Only cascades through a given matrix of cells.
   *   Can not turn an unoccupied neighbor position to live (or dead for that matter) cell.
+*   Don't love that we traverse the matrix 4 times for every transformation (set_next_condition_all, untouch_all, update_condition_all, untouch_all). Consider alternatives.
 *   Test setup for seed patterns is pretty wonky, time-intensive, and difficult to read.
 *   Runner file with basic command line interface (NICE TO HAVE).
 *   Module featuring of common seed patterns (block, beehive, tub, blinker, glider). These could be used both for testing and as available seeds for CLI user (NICE TO HAVE).
