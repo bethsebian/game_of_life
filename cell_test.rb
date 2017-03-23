@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require './lib/cell'
+require './cell'
 
 class CellTest < Minitest::Test
   attr_reader :cell
@@ -17,21 +17,22 @@ class CellTest < Minitest::Test
   end
 
   def test_it_can_rouse
-    cell.rouse
+    alive = Cell.new(:alive)
 
-    assert_equal :alive, cell.condition
+    assert_equal :alive, alive.condition
   end
 
   def test_it_can_kill
-    alive = Cell.new(:alive).kill
+    alive = Cell.new(:alive)
+    alive.kill
 
-    assert_equal :dead, cell.condition
+    assert_equal :dead, alive.condition
   end
 
   def test_can_change_condition
-    cell.rouse
+    alive = Cell.new(:alive)
 
-    assert_equal :alive, cell.condition
+    assert_equal :alive, alive.condition
   end
 
   def test_cell_is_created_with_empty_neighbor_cells
@@ -39,10 +40,10 @@ class CellTest < Minitest::Test
   end
 
   def test_it_dies_if_all_neighbors_are_dead
-    cell.rouse
-    cell.transform
+    alive = Cell.new(:alive)
+    alive.transform
 
-    assert_equal :dead, cell.condition
+    assert_equal :dead, alive.condition
   end
 
   def test_it_connects_with_neighbors
@@ -66,102 +67,101 @@ class CellTest < Minitest::Test
   end
 
   def test_it_survives_if_two_neighbors_are_alive
-    cell.rouse
-    cell_1 = Cell.new
-    cell_2 = Cell.new
-    cell_1.rouse
-    cell_2.rouse
-    cell.introduce_neighbors({top_left: cell_1})
-    cell.introduce_neighbors({top_right: cell_2})
-    cell.transform
-    assert_equal :alive, cell.condition
+    origin = Cell.new(:alive)
+    top_left = Cell.new(:alive)
+    top_right = Cell.new(:alive)
+    origin.introduce_neighbors({top_left: top_left})
+    origin.introduce_neighbors({top_right: top_right})
+    origin.transform
+    assert_equal :alive, origin.condition
   end
 
   def test_it_dies_if_four_neighbors_are_alive
-    cell.rouse
-    cell_1 = Cell.new(:alive)
-    cell_2 = Cell.new(:alive)
-    cell_3 = Cell.new(:alive)
-    cell_4 = Cell.new(:alive)
-    cell.introduce_neighbors({top_left: cell_1,
-                              top_center: cell_2,
-                              top_right: cell_3,
-                              right: cell_4})
-    cell.transform
+    origin = Cell.new(:alive)
+    top_left = Cell.new(:alive)
+    top_center = Cell.new(:alive)
+    top_right = Cell.new(:alive)
+    right = Cell.new(:alive)
+    origin.introduce_neighbors({top_left: top_left,
+                                top_center: top_center,
+                                top_right: top_right,
+                                right: right})
+    origin.transform
 
-    assert_equal :dead, cell.condition
+    assert_equal :dead, origin.condition
   end
 
   def test_it_becomes_alive_if_three_neighbors_are_alive
-    cell_1 = Cell.new(:alive)
-    cell_2 = Cell.new(:alive)
-    cell_3 = Cell.new(:alive)
-    cell.introduce_neighbors({top_left: cell_1,
-                              top_center: cell_2,
-                              top_right: cell_3})
-    cell.transform
+    origin = Cell.new
+    top_left = Cell.new(:alive)
+    top_center = Cell.new(:alive)
+    top_right = Cell.new(:alive)
+    origin.introduce_neighbors({top_left: top_left,
+                              top_center: top_center,
+                              top_right: top_right})
+    origin.transform
 
-    assert_equal :alive, cell.condition
+    assert_equal :alive, origin.condition
   end
 
   def test_neighbors_transform_also
     # XX    XX
     # OX => XX
-    cell.rouse
+    origin = Cell.new(:alive)
     alive_1 = Cell.new(:alive)
     alive_2 = Cell.new(:alive)
     dead_1 = Cell.new
-    cell.introduce_neighbors({right: alive_1,
+    origin.introduce_neighbors({right: alive_1,
                               bottom_center: dead_1,
                               bottom_right: alive_2})
-    alive_1.introduce_neighbors({left: cell,
+    alive_1.introduce_neighbors({left: origin,
                               bottom_left: dead_1,
                               bottom_center: alive_2})
-    alive_2.introduce_neighbors({top_left: cell,
+    alive_2.introduce_neighbors({top_left: origin,
                               top_center: alive_1,
                               left: dead_1})
-    dead_1.introduce_neighbors({top_center: cell,
+    dead_1.introduce_neighbors({top_center: origin,
                               top_right: alive_1,
                               right: alive_2})
-    assert_equal :alive, cell.neighbors[:right].condition
+    assert_equal :alive, origin.neighbors[:right].condition
 
-    cell.transform
+    origin.transform
 
-    assert_equal :alive, cell.condition
-    assert_equal :alive, cell.neighbors[:right].condition
-    assert_equal :alive, cell.neighbors[:bottom_center].condition
-    assert_equal :alive, cell.neighbors[:bottom_right].condition
+    assert_equal :alive, origin.condition
+    assert_equal :alive, origin.neighbors[:right].condition
+    assert_equal :alive, origin.neighbors[:bottom_center].condition
+    assert_equal :alive, origin.neighbors[:bottom_right].condition
   end
 
   def test_neighbors_transform_correctly_multiple_times_requiring_untouch
     # XO    OO        XX    XX
     # OX => OO MANUAL OX => XX
-    cell.rouse
+    origin = Cell.new(:alive)
     top_right = Cell.new
     bottom_left = Cell.new
     bottom_right = Cell.new(:alive)
-    cell.introduce_neighbors({right: top_right,
+    origin.introduce_neighbors({right: top_right,
                               bottom_center: bottom_left,
                               bottom_right: bottom_right})
-    top_right.introduce_neighbors({left: cell,
+    top_right.introduce_neighbors({left: origin,
                               bottom_left: bottom_left,
                               bottom_center: bottom_right})
     bottom_left.introduce_neighbors({top_right: top_right,
-                              top_center: cell,
+                              top_center: origin,
                               bottom_right: bottom_right})
     bottom_right.introduce_neighbors({top_center: top_right,
-                              top_left: cell,
+                              top_left: origin,
                               left: bottom_left})
-    cell.transform
-    cell.rouse
+    origin.transform
+    origin.rouse
     top_right.rouse
     bottom_right.rouse
-    cell.transform
+    origin.transform
 
-    assert_equal :alive, cell.condition
-    assert_equal :alive, cell.neighbors[:right].condition
-    assert_equal :alive, cell.neighbors[:bottom_center].condition
-    assert_equal :alive, cell.neighbors[:bottom_right].condition
+    assert_equal :alive, origin.condition
+    assert_equal :alive, origin.neighbors[:right].condition
+    assert_equal :alive, origin.neighbors[:bottom_center].condition
+    assert_equal :alive, origin.neighbors[:bottom_right].condition
   end
 
   def test_neighbors_transform_by_consulting_neighbors_untransformed_position
