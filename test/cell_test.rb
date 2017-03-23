@@ -118,8 +118,8 @@ class CellTest < Minitest::Test
   end
 
   def test_neighbors_transform_correctly_multiple_times_requiring_untouch
-    # XO    OO     XX    XX
-    # OX => OO MAN OX => XX
+    # XO    OO        XX    XX
+    # OX => OO MANUAL OX => XX
     cell.rouse
     top_right = Cell.new
     bottom_left = Cell.new
