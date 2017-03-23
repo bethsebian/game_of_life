@@ -3,7 +3,7 @@ require 'pry'
 class Cell
   attr_reader :condition, :neighbors, :touched
 
-  def initialize(condition = "dead")
+  def initialize(condition = :dead)
     @condition = condition
     @next_condition = condition
     @neighbors = {}
@@ -19,9 +19,9 @@ class Cell
 
   def set_next_condition_all
     @touched = true
-    count = neighbors.count {|position, neighbor| neighbor.condition == "alive"}
-    @next_condition = "dead" if count < 2 || count > 3 #
-    @next_condition = "alive" if count == 3
+    count = neighbors.count {|position, neighbor| neighbor.condition == :alive}
+    @next_condition = :dead if count < 2 || count > 3 #
+    @next_condition = :alive if count == 3
     untouched_cells.each {|neighbor| neighbor.set_next_condition_all}
   end
 
@@ -42,11 +42,11 @@ class Cell
   end
 
   def rouse
-    @condition = @next_condition = "alive"
+    @condition = @next_condition = :alive
   end
 
   def kill
-    @condition = @next_condition = "dead"
+    @condition = @next_condition = :dead
   end
 
   def introduce_neighbors(new_neighbors)
