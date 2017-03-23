@@ -117,7 +117,7 @@ class CellTest < Minitest::Test
     assert_equal "alive", cell.neighbors[:bottom_right].condition
   end
 
-  def test_neighbors_transform_correctly_multiple_times
+  def test_neighbors_transform_correctly_multiple_times_requiring_untouch
     # XO    OO     XX    XX
     # OX => OO MAN OX => XX
     cell.rouse
@@ -138,5 +138,48 @@ class CellTest < Minitest::Test
     assert_equal "alive", cell.neighbors[:right].condition
     assert_equal "alive", cell.neighbors[:bottom_center].condition
     assert_equal "alive", cell.neighbors[:bottom_right].condition
+  end
+
+  def test_neighbors_transform_by_consulting_neighbors_untransformed_position
+    # XXO    OXO  XXO
+    # OOX => OXO  OOX
+    top_left = Cell.new("alive")
+    top_center = Cell.new("alive")
+    top_right = Cell.new
+    bottom_left = Cell.new
+    bottom_center = Cell.new
+    bottom_right = Cell.new("alive")
+    top_left.introduce_neighbors({
+                                  right: top_center,
+                                  bottom_center: bottom_left,
+                                  bottom_right: bottom_center})
+    top_center.introduce_neighbors({
+                                  left: top_left,
+                                  right: top_right,
+                                  bottom_left: bottom_left,
+                                  bottom_center: bottom_center,
+                                  bottom_right: bottom_right})
+    top_right.introduce_neighbors({
+                                  left: top_center,
+                                  bottom_left: bottom_center,
+                                  bottom_center: bottom_right})
+    bottom_left.introduce_neighbors({
+                                  top: top_left,
+                                  top_right: top_center,
+                                  right: bottom_center})
+    bottom_center.introduce_neighbors({
+                                  top_left: top_left,
+                                  top_center: top_center,
+                                  top_right: top_right,
+                                  left: bottom_left,
+                                  right: bottom_right})
+    bottom_right.introduce_neighbors({
+                                  top_left: top_center,
+                                  top_center: top_right,
+                                  left: bottom_center})
+    top_left.transform
+
+    assert_equal "alive", top_center.condition
+    assert_equal "alive", bottom_center.condition
   end
 end
