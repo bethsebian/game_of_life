@@ -46,15 +46,18 @@ class CellTest < Minitest::Test
   end
 
   def test_it_connects_with_neighbors
-    new_neighbors = {top_left: Cell.new, top_center: Cell.new}
+    new_neighbors = {top_left: Cell.new,
+                     top_center: Cell.new}
     cell.introduce_neighbors(new_neighbors)
 
     assert_equal new_neighbors, cell.neighbors
   end
 
   def test_it_connects_with_neighbors_multiple_times
-    new_neighbors_1 = {top_left: Cell.new, top_center: Cell.new}
-    new_neighbors_2 = {bottom_left: Cell.new, bottom_center: Cell.new}
+    new_neighbors_1 = {top_left: Cell.new,
+                       top_center: Cell.new}
+    new_neighbors_2 = {bottom_left: Cell.new,
+                       bottom_center: Cell.new}
     cell.introduce_neighbors(new_neighbors_1)
     cell.introduce_neighbors(new_neighbors_2)
 
@@ -80,7 +83,10 @@ class CellTest < Minitest::Test
     cell_2 = Cell.new(:alive)
     cell_3 = Cell.new(:alive)
     cell_4 = Cell.new(:alive)
-    cell.introduce_neighbors({top_left: cell_1, top_center: cell_2, top_right: cell_3, right: cell_4})
+    cell.introduce_neighbors({top_left: cell_1,
+                              top_center: cell_2,
+                              top_right: cell_3,
+                              right: cell_4})
     cell.transform
 
     assert_equal :dead, cell.condition
@@ -90,7 +96,9 @@ class CellTest < Minitest::Test
     cell_1 = Cell.new(:alive)
     cell_2 = Cell.new(:alive)
     cell_3 = Cell.new(:alive)
-    cell.introduce_neighbors({top_left: cell_1, top_center: cell_2, top_right: cell_3})
+    cell.introduce_neighbors({top_left: cell_1,
+                              top_center: cell_2,
+                              top_right: cell_3})
     cell.transform
 
     assert_equal :alive, cell.condition
@@ -103,10 +111,18 @@ class CellTest < Minitest::Test
     alive_1 = Cell.new(:alive)
     alive_2 = Cell.new(:alive)
     dead_1 = Cell.new
-    cell.introduce_neighbors({right: alive_1, bottom_center: dead_1, bottom_right: alive_2})
-    alive_1.introduce_neighbors({left: cell, bottom_left: dead_1, bottom_center: alive_2})
-    alive_2.introduce_neighbors({top_left: cell, top_center: alive_1, left: dead_1})
-    dead_1.introduce_neighbors({top_center: cell, top_right: alive_1, right: alive_2})
+    cell.introduce_neighbors({right: alive_1,
+                              bottom_center: dead_1,
+                              bottom_right: alive_2})
+    alive_1.introduce_neighbors({left: cell,
+                              bottom_left: dead_1,
+                              bottom_center: alive_2})
+    alive_2.introduce_neighbors({top_left: cell,
+                              top_center: alive_1,
+                              left: dead_1})
+    dead_1.introduce_neighbors({top_center: cell,
+                              top_right: alive_1,
+                              right: alive_2})
     assert_equal :alive, cell.neighbors[:right].condition
 
     cell.transform
@@ -124,10 +140,18 @@ class CellTest < Minitest::Test
     top_right = Cell.new
     bottom_left = Cell.new
     bottom_right = Cell.new(:alive)
-    cell.introduce_neighbors({right: top_right, bottom_center: bottom_left, bottom_right: bottom_right})
-    top_right.introduce_neighbors({left: cell, bottom_left: bottom_left, bottom_center: bottom_right})
-    bottom_left.introduce_neighbors({top_right: top_right, top_center: cell, bottom_right: bottom_right})
-    bottom_right.introduce_neighbors({top_center: top_right, top_left: cell, left: bottom_left})
+    cell.introduce_neighbors({right: top_right,
+                              bottom_center: bottom_left,
+                              bottom_right: bottom_right})
+    top_right.introduce_neighbors({left: cell,
+                              bottom_left: bottom_left,
+                              bottom_center: bottom_right})
+    bottom_left.introduce_neighbors({top_right: top_right,
+                              top_center: cell,
+                              bottom_right: bottom_right})
+    bottom_right.introduce_neighbors({top_center: top_right,
+                              top_left: cell,
+                              left: bottom_left})
     cell.transform
     cell.rouse
     top_right.rouse
